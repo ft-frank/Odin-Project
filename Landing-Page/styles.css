@@ -1,0 +1,76 @@
+body{
+    display:flex;
+    flex-direction:column;
+    font-family: "Roboto"
+}
+
+header{
+    display: flex;
+    justify-content: space-evenly;
+    font-family: "Roboto";
+    background-color:#1F2937;
+    height:30px
+}
+
+h1{
+    font-size: 48px;
+    font-weight: 900;
+    color: #F9FAF8
+}
+a{
+    text-decoration: none
+}
+
+.logo{
+    color: #f9faf8;
+    font-size: 24px;
+
+}
+
+.right-links{
+    font-size: 18px;
+   
+}
+
+.small{
+     color: #E5E7EB;
+     font-size: 18px;
+}
+
+.introduction{
+    display:flex;
+    padding: 96px;
+    background-color: #1F2937
+
+}
+
+.awesome{
+    display:flex;
+    flex-direction: column;
+
+
+}
+.nike{
+     max-width: 100%; 
+     height: auto;
+
+}
+
+.signup{
+    background-color:#3882F6;
+    color: white
+}
+
+.information{
+    display: flex;
+    flex-direction:column;
+    align-items: center
+
+
+}
+
+.figures{
+    display: flex;
+    gap: 12px
+}
+
