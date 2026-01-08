@@ -1,0 +1,12 @@
+#screenboard {
+    display: grid;
+    grid-template: 1fr 1fr 1fr / 1fr 1fr 1fr;
+    height: 60vh
+
+}
+
+.box {
+    border: 1px solid black;
+    text-align: center;
+    justify-content: center;
+}
