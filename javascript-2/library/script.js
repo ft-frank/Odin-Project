@@ -1,13 +1,57 @@
-const libraryBooks = []
+class Book {
 
-function Book(title, author, pages) {
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.read = false;
-    this.ID = crypto.randomUUID()
+    static listOfBooks = []
 
-    this.info = function() {
+    static reloadLibraryView() {
+        viewLibrary.innerHTML = ""
+        Book.listOfBooks.forEach(book => {
+            let newDiv = document.createElement('div')
+            newDiv.id = book.ID
+            newDiv.textContent = book.info()
+            let deleteButton = document.createElement('button')
+            deleteButton.textContent = "delete"
+            deleteButton.addEventListener('click', () => {
+                const deletedBook = Book.listOfBooks.find(bookSearched => bookSearched.ID === book.ID)
+                console.log(deletedBook.ID)
+                Book.listOfBooks.splice(deletedBook, 1)
+                Book.reloadLibraryView()
+                console.log('what the flap')
+
+            })
+            let readButton = document.createElement('button')
+            if (book.read) {
+                readButton.textContent = "read"
+
+            }
+            else {
+                readButton.textContent = "unread"
+            }
+        
+            readButton.addEventListener('click', () =>{
+                book.changeReadStatus()
+                Book.reloadLibraryView()
+            })
+
+            newDiv.appendChild(deleteButton)
+            newDiv.appendChild(readButton)
+            viewLibrary.appendChild(newDiv)
+
+
+        })
+    }
+    
+    constructor(title, author, pages) {
+        this.title = title
+        this.author = author
+        this.pages = pages
+        this.read = false
+        this.ID = crypto.randomUUID()
+        Book.listOfBooks.push(this)
+
+
+    }
+
+    info() {
         if (!(this.read)) {
             return("The " + this.title + " by " + this.author + ", " + this.page + " pages" + ", not read yet. \n" + this.ID)
 
@@ -17,7 +61,7 @@ function Book(title, author, pages) {
         }
     }
 
-    this.reed = function() {
+    changeReadStatus(){
         if ((this.read) == false) {
             this.read = true
 
@@ -27,58 +71,15 @@ function Book(title, author, pages) {
         }
         
     }
+
 }
 
-function addBookToLibrary (title, author, pages) {
-    book = new Book(title, author, pages);
-    book.ID = crypto.randomUUID();
-    libraryBooks.push(book)
-    
-}
+const viewLibrary = document.getElementById('viewLibrary')
 
-const newBook = document.querySelector("#newBook")
+const Dune = new Book("Dune", "Frank Herbert", "IDK")
+Book.reloadLibraryView()
+console.log((Book.listOfBooks)[0].ID)
 
-const libraryView = document.querySelector("#library")
-
-
-
-function loadLibraryBooks() {
-    libraryView.innerHTML = ""
-    libraryBooks.forEach(book => {
-        let newDiv = document.createElement('div')
-        newDiv.id = book.ID
-        console.log(newDiv.id)
-        newDiv.textContent = book.info()
-        let deleteButton = document.createElement('button')
-        deleteButton.textContent = "delete"
-        deleteButton.addEventListener('click', () =>{
-            const deletedBook = libraryBooks.find(bookSearched => bookSearched.ID === book.ID)
-            libraryBooks.splice(deletedBook, 1)
-            loadLibraryBooks()
-            })
-        let readButton = document.createElement('button')
-        if (book.read == false) {
-            readButton.textContent = "unread"
-        }
-        else if (book.read == true){
-            readButton.textContent = "read"
-        }
-        readButton.addEventListener('click', ()=> {
-            book.reed()
-            loadLibraryBooks()
-
-        }
-        )
-        newDiv.appendChild(readButton)
-        newDiv.appendChild(deleteButton)
-        libraryView.appendChild(newDiv)
-        
-        }
-    )
-    }
-
-
-loadLibraryBooks()
 
 const bookForm = document.querySelector("#bookForm")
 bookForm.addEventListener('submit', function(event)
@@ -92,5 +93,3 @@ bookForm.addEventListener('submit', function(event)
     loadLibraryBooks()                 
     }
 )
-
-
