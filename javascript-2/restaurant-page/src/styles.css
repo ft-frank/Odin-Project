@@ -1,0 +1,31 @@
+#navbar {
+    background-color: #D4A653;
+    position: sticky;
+    display: flex;
+    justify-content: space-evenly;
+    height: 10vh;
+    text-align: center;
+
+}
+
+button {
+    background-color:#FF6347;
+    font-size: 5vh;
+    border: 1px solid black
+
+}
+
+#content{
+    background-color: #D4A653;
+}
+
+#menuDiv {
+    text-align: center;    /*later adjust width depending on screensize using pure css */
+    display: grid;
+    grid-template: 1fr 1fr 1fr / 1fr;
+}
+
+.foodImg{
+    width: 20%;
+    height: 20vh;
+}
