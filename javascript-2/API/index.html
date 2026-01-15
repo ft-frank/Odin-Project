@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+
+    <img src="#">
+
+    <button id = "theButton"> refresh </button>
+
+
+    <script>
+
+        const img = document.querySelector('img')
+
+        refresh()
+
+        async function refresh() {
+
+            const response = await (fetch('https://api.giphy.com/v1/gifs/translate?api_key=       &       =otter&weirdness=2'))
+            const data = await (response.json())
+            const link = data.data.images.original.url;
+            img.src = link
+        
+}
+
+        const theButton = document.getElementById('theButton')
+        theButton.addEventListener("click", () => {
+            refresh()
+        })
+
+    </script>
+</body>
+
+
+
+</html>
