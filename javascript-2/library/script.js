@@ -80,10 +80,11 @@ function loadLibraryBooks() {
 
 loadLibraryBooks()
 
+
+
 const bookForm = document.querySelector("#bookForm")
 bookForm.addEventListener('submit', function(event)
     {event.preventDefault();
-    
     const formData = new FormData(event.target)
     const title = formData.get('title')
     const author = formData.get('author')
@@ -93,4 +94,5 @@ bookForm.addEventListener('submit', function(event)
     }
 )
 
-
+const titleInputField = document.getElementById('title')
+titleInputField.setCustomValidity("BRUH FILL THIS IN")
