@@ -1,5 +1,10 @@
 import './styles.css'
 
+
+
+
+
+
 class Item {
 
     constructor(title, description, dueDate, priority) {
@@ -16,7 +21,7 @@ class Item {
 
         const item = document.createElement('button')
         item.classList.add('collapsible-item')
-        item.textContent = `${this.title}`
+        item.textContent =  `${this.title}`
 
         const itemContent = document.createElement('div')
         itemContent.className = 'content'
@@ -76,22 +81,18 @@ class Item {
 
 
         return div
-        
     }
-
 }
 
 class Project {
 
     static listOfProjects = []
-    static listofProjectTitles = []
     static currentProject = undefined
 
     constructor(title) {
         this.title = title
         this.items = []
         Project.listOfProjects.push(this)
-        Project.listofProjectTitles.push(this.title)
         Project.currentProject = this.title
     }
 
@@ -117,20 +118,27 @@ function Page() {
     function loadProjects() {
         const projects = document.getElementById("selectProjects")
         projects.innerHTML = ""
-        Project.listofProjectTitles.forEach((projectTitle)=>{  
+        Project.listOfProjects.forEach((project)=>{  
             const option = document.createElement("option")
-            option.textContent = projectTitle
+            option.textContent = project.title
+            if (project.title === Project.currentProject) {
+            option.selected = true
+        }
             projects.appendChild(option)
         })  
+        
+        
     }
 
     function loadItems() {
         const currentProject = Project.listOfProjects.find((project) => project.title === Project.currentProject)
-        content.append(currentProject.view())
+        console.log(typeof currentProject)
+        content.append(currentProject.view())   
         
     }
 
     function addItem(item) {
+        
         const currentProject = Project.listOfProjects.find((project) => project.title === Project.currentProject)
         currentProject.items.push(item)
 
@@ -146,7 +154,8 @@ function Page() {
             const description = formData.get('description')
             const dueDate = formData.get('dueDate')
             const priority = formData.get('priority')
-            const item = new Item(title, description, dueDate, priority, Project.currentProject)
+            const currentProject = Project.currentProject
+            const item = new Item(title, description, dueDate, priority, currentProject)
             addItem(item)
             // const currentProject = Project.listOfProjects.find((project) => project.title === Project.currentProject)
             itemForm.reset()
@@ -165,7 +174,12 @@ function Page() {
 
     function checkValidity(checkTitle) {
 
-    return Project.listofProjectTitles.includes(checkTitle)
+        const listOfProjectTitles = []
+        Project.listOfProjects.forEach((project) => {
+            listOfProjectTitles.push(project.title)
+        })
+
+    return listOfProjectTitles.includes(checkTitle)
 }
 
     function initialiseProjectForm() {
@@ -220,6 +234,7 @@ function Page() {
             Project.switchCurrent(selectForm.value)
             console.log(selectForm.value)
             changeHeader()
+            loadItems()
         })
 
     }
@@ -228,20 +243,45 @@ function Page() {
         loadItems()
         loadProjects()
         loadSelectProject()
+        localStorage.setItem('listOfProjects', JSON.stringify(Project.listOfProjects))
+        localStorage.setItem('currentProject', Project.currentProject)
     }
 
     function initialise() {
-        initialiseProjectForm()
-        initialiseItemForm()
-      
+    initialiseProjectForm()
+    initialiseItemForm()
+    
+    const savedProjects = JSON.parse(localStorage.getItem('listOfProjects'))
+    const savedCurrentProject = localStorage.getItem('currentProject')
+    
+    if (savedProjects && savedProjects.length > 0) {
+        Project.listOfProjects = []
+        savedProjects.forEach(projectData => {
+            const project = new Project(projectData.title)
+            Project.listOfProjects.pop()
+            project.items = projectData.items.map(itemData => {
+                const item = new Item(
+                    itemData.title,
+                    itemData.description,
+                    itemData.dueDate,
+                    itemData.priority
+                )
+                return item
+            })
+            
+            Project.listOfProjects.push(project)
+        })
+        
+        Project.currentProject = savedCurrentProject || Project.listOfProjects[0].title
     }
+}
 
     return {loadPage,initialise}
 }
 
 const page = Page()
+page.initialise() 
 page.loadPage()
-page.initialise()
 
 
 
@@ -251,10 +291,3 @@ page.initialise()
 
 
 
-
-
-
-// const selectProject = document.getElementById('selectProject')
-// selectProject.addEventListener('submit', (event)=>{
-//     event.preventDefault()
-    
