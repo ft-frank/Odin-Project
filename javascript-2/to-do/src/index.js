@@ -11,12 +11,15 @@ class Item {
     }
 
     view() {
-        const item = document.createElement('div')
-        item.className = 'item'
-        
-        const titleItem = document.createElement('p')
-        titleItem.textContent = this.title
-        titleItem.className = 'item-title'
+
+        const div = document.createElement('div')
+
+        const item = document.createElement('button')
+        item.classList.add('collapsible-item')
+        item.textContent = `${this.title}`
+
+        const itemContent = document.createElement('div')
+        itemContent.className = 'content'
         
         const descriptionItem = document.createElement('p')
         descriptionItem.textContent = this.description
@@ -44,15 +47,36 @@ class Item {
         })
         deleteButton.className = "delete"
 
+        const checkBox = document.createElement('input')
+        checkBox.type = "checkbox"
+
+        item.addEventListener("click", () => {
+            item.classList.toggle("active")
+            var itemCont = item.nextElementSibling;
+            if (itemCont.style.display === "block") {
+                itemCont.style.display = "none"
+            }
+            else {
+                itemCont.style.display = "block"
+            }
+        })
+
+        itemContent.appendChild(descriptionItem)
+        itemContent.appendChild(dueDateItem)
+        itemContent.appendChild(priorityItem)
+        itemContent.appendChild(projectItem)
+        itemContent.appendChild(deleteButton)
+        item.appendChild(checkBox)
+
+        div.appendChild(item)
+        div.appendChild(itemContent)
+
         
-        item.appendChild(titleItem)
-        item.appendChild(descriptionItem)
-        item.appendChild(dueDateItem)
-        item.appendChild(priorityItem)
-        item.appendChild(projectItem)
-        item.appendChild(deleteButton)
+
+
+
+        return div
         
-        return item
     }
 
 }
@@ -122,10 +146,9 @@ function Page() {
             const description = formData.get('description')
             const dueDate = formData.get('dueDate')
             const priority = formData.get('priority')
-            const item = new Item(title, description, dueDate, priority, Project.currentProject.title)
+            const item = new Item(title, description, dueDate, priority, Project.currentProject)
             addItem(item)
-            const currentProject = Project.listOfProjects.find((project) => project.title === Project.currentProject)
-            console.log(currentProject.items)
+            // const currentProject = Project.listOfProjects.find((project) => project.title === Project.currentProject)
             itemForm.reset()
             loadPage()
     
@@ -148,6 +171,7 @@ function Page() {
     function initialiseProjectForm() {
         const projectForm = document.getElementById("projectForm")
         const titleInput = document.getElementById("projectTitle")
+        
         
     
         titleInput.addEventListener('input', () => {
@@ -190,13 +214,12 @@ function Page() {
 }
 
 
-    function initaliseSelectProject() {
+    function loadSelectProject() {
         const selectForm = document.getElementById('selectProjects')
         selectForm.addEventListener('change', (event) => {
-            event.preventDefault()
             Project.switchCurrent(selectForm.value)
-            console.log(Project.currentProject)
-            loadPage()
+            console.log(selectForm.value)
+            changeHeader()
         })
 
     }
@@ -204,12 +227,13 @@ function Page() {
         changeHeader()
         loadItems()
         loadProjects()
+        loadSelectProject()
     }
 
     function initialise() {
         initialiseProjectForm()
         initialiseItemForm()
-        initaliseSelectProject()
+      
     }
 
     return {loadPage,initialise}
