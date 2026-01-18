@@ -1,5 +1,7 @@
 
 async function getWeather(location) {
+
+    // API SAFE because it is free
     try {
         const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/?key=APCTF2VJX6KFJDBZFJBQHLXYW`)
 
