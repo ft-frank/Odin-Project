@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 const ShopCard = function(props) { 
 
     const handleClick = props.handleClick
+    const reset = props.reset
 
     const pokemonID = props.pokemonID
     if (pokemonID == 0){
@@ -16,7 +17,6 @@ const ShopCard = function(props) {
         const [pokeWeight, setPokeWeight] = useState(null)
         const [pokeStats, setPokeStats] = useState(null)
         const [imageURL, setImageURL] = useState(null)
-
         const [error, setError] = useState(null)
         const [loading, setLoading] = useState(true)
 
@@ -46,15 +46,16 @@ const ShopCard = function(props) {
         
     
     
-
-    const [count, setCount] = useState(0)
+    const preCount = Number(localStorage.getItem(`${pokemonID}`)) ?? 0
+    const [count, setCount] = useState(preCount)
     const {pokeName, pokemonTypes, pokeWeight, pokeStats, imageURL, error, loading} = pokemonInfo(pokemonID);
 
     useEffect( () => {
-        if (count) {
-            handleClick(pokemonID, count)
+        if (count && imageURL && pokeName) {
+            localStorage.setItem(`${pokemonID}`, count)
+            handleClick(pokemonID, count, imageURL, pokeName)
         }
-    }, [count]
+    }, [count, imageURL, pokeName]
     )
 
     if (loading) return <p>Loading...</p>;
@@ -67,18 +68,19 @@ const ShopCard = function(props) {
                 <img src={imageURL} alt={"placeholder text"} />
                 <p>Name: {pokeName}</p>
                 <p>ID: {pokemonID}</p>
+                <p>{reset}</p>
                 {pokemonTypes.map((type, index)=> {
                     return <p key = {index}>{type}</p>
                 })} 
-                <p>Weight: {pokeWeight}</p>
+                <p>Weight: {pokeWeight}kg</p>
                 <p>Count: {count} </p>
                 {/* <p>{pokeStats}</p> */}
-                <div >
-                    <button onClick = {() => {setCount(count + 1)} }>
-                            +
-                    </button>
+                <div>
                     <button onClick = {() => {if (count>0){setCount(count - 1)}}}>
                             -
+                    </button>
+                    <button onClick = {() => {setCount(count + 1)} }>
+                            +
                     </button>
                 </div>
                 
